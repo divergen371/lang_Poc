@@ -222,13 +222,6 @@ cabal clean           # ビルド成果物削除
 | `rowUnify occurs-check loop` | `Row.Unify` の tail-variable ハンドリングを再確認 |
 | `Reserved word: in`          | パーサーの予約語処理問題（修正済み）              |
 
-## 🤝 貢献方法
-
-1. **Fork & ブランチ作成**
-2. **ローカルテスト**: `cabal test` が通ることを確認
-3. **プルリクエスト提出**: CI (Ormolu + build) が自動実行
-4. **レビュー**: 1 名の承認で merge
-
 ## 📚 今後の TODO
 
 - [ ] エフェクトサブタイピング `{Console|ρ} ⊑ {IO}`

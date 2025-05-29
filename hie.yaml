@@ -1,0 +1,10 @@
+cradle:
+  cabal:
+    - path: "src"
+      component: "exe:effect-poc"
+    - path: "app"
+      component: "exe:effect-poc"
+    - path: "test"
+      component: "test:effect-poc-test"
+
+formattingProvider: ormolu
