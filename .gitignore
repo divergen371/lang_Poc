@@ -1,0 +1,90 @@
+# SpecStory explanation file
+.specstory/.what-is-this.md
+
+# Haskell
+## Compilation files
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+*.chi
+*.chs.h
+*.dyn_chi
+.virtualenv
+.hpc
+.hsenv
+.cabal-sandbox/
+cabal.sandbox.config
+*.prof
+*.aux
+*.hp
+*.eventlog
+.HTF/
+.ghc.environment.*
+
+# Cabal
+dist/
+dist-newstyle/
+cabal-dev
+*.tar.gz
+*.cabal~
+cabal.project.local
+cabal.project.local~
+
+# Stack
+.stack-work/
+*~
+*.swp
+
+# IDE/Editor files
+## VSCode
+.vscode/
+
+## Vim
+*.swp
+*.swo
+*~
+
+## Emacs
+*#
+.#*
+
+## IntelliJ IDEA / Haskell for Mac
+.idea/
+*.iml
+
+## Haskell Language Server
+.hie/
+hie.yaml.local
+
+# OS generated files
+## macOS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Icon?
+
+## Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+## Linux
+*~
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Profiling data
+*.prof
+*.hp
+*.ps
+
+# Build outputs
+main
+*.exe

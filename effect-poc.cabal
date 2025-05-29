@@ -1,0 +1,35 @@
+cabal-version:   3.0
+name:            effect-poc
+version:         0.1.0.0
+license:         BSD-3-Clause
+license-file:    LICENSE
+author:          divergen371
+maintainer:      51857554+divergen371@users.noreply.github.com
+category:        Language
+build-type:      Simple
+extra-doc-files: CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+executable effect-poc
+    import:           warnings
+    main-is:          Main.hs
+    other-modules:    Syntax, Typecheck, Eval, Kind,
+                      Typecheck.Unify, Typecheck.Infer, Typecheck.Subst, Parser
+    build-depends:    base ^>=4.21.0.0, containers, megaparsec, mtl
+    hs-source-dirs:   app, src
+    default-language: Haskell2010
+
+test-suite effect-poc-test
+    import:           warnings
+    type:             exitcode-stdio-1.0
+    main-is:          Main.hs
+    other-modules:    Test.Syntax, Test.Kind, Test.Parser,
+                      Test.Typecheck.Subst, Test.Typecheck.Unify, Test.Typecheck.Infer,
+                      ParserTest,
+                      Kind, Syntax, Typecheck.Infer, Typecheck.Subst, Typecheck.Unify, Eval, Typecheck, Parser
+    build-depends:    base ^>=4.21.0.0, containers, megaparsec, mtl,
+                      hspec, QuickCheck
+    hs-source-dirs:   test, src
+    default-language: Haskell2010

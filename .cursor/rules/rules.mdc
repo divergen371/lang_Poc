@@ -1,0 +1,82 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Mini-Setia Effect System PoC – Project Rules
+
+Scope: Haskell-only prototype that implements row-polymorphic algebraic effects & handlers (State, Exception, Console) with STLC core. Optimisation, GC, or multi-backend support are out of scope for this repo.
+
+⸻
+
+1. Directory Layout (fixed)
+
+app/              Main.hs (REPL)
+src/
+ ├─ Syntax.hs      -- Expr, Ty, EffRow
+ ├─ Kind.hs        -- Row kind system
+ ├─ Typecheck/     -- Subst, Unify, Infer (Algorithm M)
+ ├─ Elaborate.hs   -- Surface → CPS Core
+ ├─ Core.hs        -- CPS IR with Op / Handle nodes
+ └─ Eval.hs        -- Small-step handler interpreter
+test/             QuickCheck & doctest specs
+
+Add only under src/ or app/.  Update .cabal hs-source-dirs if new top-level dirs appear.
+
+⸻
+
+2. Build & Toolchain
+
+Component	Recommended	Notes
+GHC	9.10.x (LTS) or 9.12.2	9.12 needs allow-newer until lib upper bounds relax.
+Cabal	≥ 3.10	Add allow-newer: base, prettyprinter, megaparsec in cabal.project.
+HLS	version matching the chosen GHC	For 9.12 use ghcup compile hls -g 9.12.2.
+
+Quick commands
+
+cabal update          # refresh package index
+cabal build           # compile
+cabal test            # run specs
+cabal clean           # wipe dist
+
+
+⸻
+
+3. Coding Conventions
+	•	Modules: PascalCase, module … where must match file path.
+	•	Effects: new effect = add constructor to EffLabel in Syntax.hs and extend rowUnify & Eval.
+	•	Imports: prefer explicit (import Data.Map (Map)), avoid Prelude hiding tricks.
+	•	Language Extensions: keep to the minimal set already enabled; discuss in PR before adding more.
+
+⸻
+
+4. Common Build Errors
+
+Message	Fix
+cannot find source for X	Ensure file is under hs-source-dirs and listed in other-modules:.
+Unknown/unsupported GHC	Downgrade to 9.10 or add allow-newer lines.
+rowUnify occurs-check loop	Re-check tail-variable handling in Row.Unify.
+
+
+⸻
+
+5. CI (GitHub Actions)
+
+A working template lives in .github/workflows/ci.yaml.  Every PR must pass cabal build & cabal test on Ubuntu-latest with the repo’s pinned GHC.
+
+⸻
+
+6. Contribution Workflow
+	1.	Fork & create feature branch.
+	2.	Ensure cabal test passes locally.
+	3.	Submit PR; auto-review checks formatting (Ormolu) & CI.
+	4.	One approving review required to merge.
+
+⸻
+
+7. Open TODOs
+	•	Effect subtyping {Console|ρ} ⊑ {IO}
+	•	Benchmarks for handler overhead
+	•	FlatBuffers schema for Core ⟷ future backend
+
+Last updated 2025-05-29.
