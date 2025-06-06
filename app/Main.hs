@@ -47,6 +47,9 @@ repl ctx = do
     ":help" -> do
       printHelp
       repl ctx
+    ":h" -> do
+      printHelp
+      repl ctx
     ":?" -> do
       printHelp
       repl ctx
@@ -97,7 +100,7 @@ printHelp = putStrLn $ unlines
   [ "Mini-Setia Effect System REPL"
   , ""
   , "Commands:"
-  , "  :help, :?          Show this help message"
+  , "  :help, :?, :h       Show this help message"
   , "  :type <expr>       Show the type of an expression"
   , "  :quit, :q          Exit the REPL"
   , ""
