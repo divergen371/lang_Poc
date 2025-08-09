@@ -1,12 +1,13 @@
 module Test.Typecheck.Unify where
 
-import Test.Hspec
 import qualified Data.Map as M
-
 import Syntax
+import Test.Hspec
+import Test.Syntax ()
 import Typecheck.Subst
 import Typecheck.Unify
-import Test.Syntax () -- Arbitrary instances
+
+-- Arbitrary instances
 
 -- Tests
 spec :: Spec
@@ -14,7 +15,7 @@ spec = do
   describe "Basic type unification" $ do
     it "unifies identical type variables" $
       unify (TV "a") (TV "a") `shouldBe` Right emptySubst
-    
+
     it "unifies type variable with type" $ do
       let result = unify (TV "a") (TV "b")
       case result of
@@ -37,4 +38,4 @@ spec = do
 
   describe "Tail unification" $ do
     it "unifies empty tails" $
-      unifyTail Empty Empty `shouldBe` Right emptySubst 
+      unifyTail Empty Empty `shouldBe` Right emptySubst

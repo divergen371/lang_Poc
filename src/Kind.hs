@@ -1,8 +1,9 @@
 module Kind
-  ( Kind(..)
-  , KindError(..)
-  , kindCheck
-  ) where
+  ( Kind (..),
+    KindError (..),
+    kindCheck,
+  )
+where
 
 import Syntax
 
@@ -14,4 +15,4 @@ data KindError = KindMismatch | UnknownType deriving (Show, Eq)
 
 kindCheck :: Ty -> Either KindError Kind
 kindCheck (TV _) = Right Star
-kindCheck (TFun _ _ _) = Right Star 
+kindCheck (TFun _ _ _) = Right Star

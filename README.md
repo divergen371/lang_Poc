@@ -152,15 +152,22 @@ Type :help for help, :quit to exit
 
 effect-poc> let id = \x. x in id
 Parsed: Let "id" (Lam "x" (Var "x")) (Var "id")
-Type: t0 -> t0
+Type: t0 -[∅]> t0
+Value: <evaluation not implemented yet>
 
 effect-poc> \f. \x. f x
 Parsed: Lam "f" (Lam "x" (App (Var "f") (Var "x")))
-Type: (t0 -> t1) -> t0 -> t1
+Type: t0 -[∅]> t1 -[∅]> t2
+Value: <evaluation not implemented yet>
 
 effect-poc> :type \x. x
-Type: t0 -> t0
+Type: t0 -[∅]> t0
 ```
+
+注記:
+
+- 現在、評価器は未実装です。そのため、REPL での評価結果は常に `Value: <evaluation not implemented yet>` のダミー出力になります（`:type` は型のみを表示）。
+- 関数型はエフェクト行付きで表示されます。エフェクトが空の場合は `t1 -[∅]> t2` の形式になります。
 
 ### REPL コマンド
 
@@ -235,3 +242,4 @@ BSD-3-Clause - 詳細は [LICENSE](LICENSE) を参照
 ---
 
 _Last updated: 2025-05-29_
+_Last updated: 2025-08-09_

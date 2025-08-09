@@ -1,19 +1,19 @@
 module Main where
 
-import System.IO
 import Control.Monad.State
 import qualified Data.Map as M
-
-import Syntax
 import Parser
+import Syntax
+import System.IO
 import Typecheck.Infer
 import Typecheck.Subst
 
 -- REPL のコンテキスト
-data ReplContext = ReplContext 
-  { replTypeEnv :: TypeEnv  -- 型環境
-  , replValueEnv :: M.Map String Expr  -- 値環境（簡易的な実装）
-  } deriving (Show)
+data ReplContext = ReplContext
+  { replTypeEnv :: TypeEnv, -- 型環境
+    replValueEnv :: M.Map String Expr -- 値環境（簡易的な実装）
+  }
+  deriving (Show)
 
 initialContext :: ReplContext
 initialContext = ReplContext M.empty M.empty
@@ -26,11 +26,11 @@ repl ctx = do
   input <- getLine
   case input of
     ":quit" -> putStrLn "Goodbye!"
-    ":q"    -> putStrLn "Goodbye!"
+    ":q" -> putStrLn "Goodbye!"
     ":type" -> do
       putStrLn "Usage: :type <expression>"
       repl ctx
-    ':':'t':'y':'p':'e':' ':expr -> do
+    ':' : 't' : 'y' : 'p' : 'e' : ' ' : expr -> do
       -- 式の型を表示
       case parseExpr expr of
         Left err -> do
@@ -78,40 +78,42 @@ runInfer m = evalStateT m 0
 -- 型のプリティプリント
 prettyType :: Ty -> String
 prettyType (TV name) = name
-prettyType (TFun t1 eff t2) = 
+prettyType (TFun t1 eff t2) =
   prettyType t1 ++ " -[" ++ prettyEffRow eff ++ "]> " ++ prettyType t2
 
 prettyEffRow :: EffRow -> String
 prettyEffRow (Row effs Empty) | M.null effs = "∅"
-prettyEffRow (Row effs tailRow) = 
+prettyEffRow (Row effs tailRow) =
   let effStrs = map (\(name, ty) -> name ++ "(" ++ prettyType ty ++ ")") (M.toList effs)
       tailStr = case tailRow of
         Empty -> ""
         TVTail name -> " | " ++ name
-  in if null effStrs
-     then case tailRow of
-       Empty -> "∅"
-       TVTail name -> name
-     else unwords effStrs ++ tailStr
+   in if null effStrs
+        then case tailRow of
+          Empty -> "∅"
+          TVTail name -> name
+        else unwords effStrs ++ tailStr
 
 -- ヘルプメッセージ
 printHelp :: IO ()
-printHelp = putStrLn $ unlines
-  [ "Mini-Setia Effect System REPL"
-  , ""
-  , "Commands:"
-  , "  :help, :?, :h       Show this help message"
-  , "  :type <expr>       Show the type of an expression"
-  , "  :quit, :q          Exit the REPL"
-  , ""
-  , "Expression syntax:"
-  , "  x                  Variable"
-  , "  \\x. e             Lambda abstraction"
-  , "  e1 e2              Application"
-  , "  let x = e1 in e2   Let binding"
-  , "  perform eff arg    Effect operation"
-  , "  handle e with h    Effect handler"
-  ]
+printHelp =
+  putStrLn $
+    unlines
+      [ "Mini-Setia Effect System REPL",
+        "",
+        "Commands:",
+        "  :help, :?, :h       Show this help message",
+        "  :type <expr>       Show the type of an expression",
+        "  :quit, :q          Exit the REPL",
+        "",
+        "Expression syntax:",
+        "  x                  Variable",
+        "  \\x. e             Lambda abstraction",
+        "  e1 e2              Application",
+        "  let x = e1 in e2   Let binding",
+        "  perform eff arg    Effect operation",
+        "  handle e with h    Effect handler"
+      ]
 
 main :: IO ()
 main = do

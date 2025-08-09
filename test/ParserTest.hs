@@ -1,29 +1,29 @@
 module ParserTest where
 
-import Test.QuickCheck
 import Parser
 import Syntax
+import Test.QuickCheck
 
 -- 基本的なパーサーテスト
 testBasicExpressions :: IO ()
 testBasicExpressions = do
   putStrLn "=== Basic Expression Tests ==="
-  
+
   -- 変数
   testParse "x" "Variable"
-  
+
   -- Lambda式
   testParse "\\x. x" "Lambda"
-  
+
   -- アプリケーション
   testParse "f x" "Application"
-  
+
   -- 簡単なlet式
   testParse "let x = y in x" "Simple Let"
-  
+
   -- 問題のlet式
   testParse "let id = \\x. x in id" "Lambda in Let"
-  
+
   -- より複雑な例
   testParse "let f = \\x. \\y. x in f" "Nested Lambda in Let"
 
@@ -40,7 +40,7 @@ testParse input description = do
 testLetExpressions :: IO ()
 testLetExpressions = do
   putStrLn "\n=== Let Expression Tests ==="
-  
+
   -- 段階的にテスト
   testParse "let" "Keyword only"
   testParse "let x" "With identifier"
@@ -48,7 +48,7 @@ testLetExpressions = do
   testParse "let x = y" "With simple value"
   testParse "let x = y in" "With 'in' keyword"
   testParse "let x = y in z" "Complete simple let"
-  
+
   -- Lambda関連
   testParse "\\x. x" "Just lambda"
   testParse "let x = \\y. y" "Lambda without 'in'"
@@ -60,4 +60,4 @@ runAllTests :: IO ()
 runAllTests = do
   testBasicExpressions
   testLetExpressions
-  putStrLn "\n=== Tests Complete ===" 
+  putStrLn "\n=== Tests Complete ==="

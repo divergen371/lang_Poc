@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 module Parser where
 
+import Data.Void
+import Syntax
 import Text.Megaparsec
 import Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
-import Data.Void
-
-import Syntax
 
 type Parser = Parsec Void String
 
@@ -71,9 +71,9 @@ pLet = do
   _ <- keyword "let"
   x <- identifier
   _ <- symbol "="
-  e1 <- try pLet <|> pNonLet  -- letの右辺でもlet式を許可（tryでバックトラッキング）
+  e1 <- try pLet <|> pNonLet -- letの右辺でもlet式を許可（tryでバックトラッキング）
   _ <- keyword "in"
-  e2 <- pExpr    -- inの後は完全な式を許可
+  e2 <- pExpr -- inの後は完全な式を許可
   return $ Let x e1 e2
 
 -- lambda式レベル
@@ -94,7 +94,7 @@ pLambda = do
   _ <- symbol "\\" <|> symbol "λ"
   x <- identifier
   _ <- symbol "."
-  body <- pNonLet  -- lambda本体はnon-let式
+  body <- pNonLet -- lambda本体はnon-let式
   return $ Lam x body
 
 -- perform式
@@ -109,18 +109,19 @@ pPerform = do
 pHandle :: Parser Expr
 pHandle = do
   _ <- keyword "handle"
-  expr <- pApp  -- handleの第一引数はアプリケーションレベル
+  expr <- pApp -- handleの第一引数はアプリケーションレベル
   _ <- keyword "with"
-  handler <- pExpr  -- withの後は再帰的にpExpr
+  handler <- pExpr -- withの後は再帰的にpExpr
   return $ Handle expr handler
 
 -- アプリケーション（高優先度）
 pApp :: Parser Expr
-pApp = choice
-  [ try pPerform
-  , try pHandle
-  , pAppChain
-  ]
+pApp =
+  choice
+    [ try pPerform,
+      try pHandle,
+      pAppChain
+    ]
 
 pAppChain :: Parser Expr
 pAppChain = do
@@ -128,13 +129,14 @@ pAppChain = do
   return $ foldl1 App terms
 
 pAtom :: Parser Expr
-pAtom = choice
-  [ Var <$> safeIdentifier  -- 予約語をチェックする識別子を使用
-  , parens pExpr
-  ]
+pAtom =
+  choice
+    [ Var <$> safeIdentifier, -- 予約語をチェックする識別子を使用
+      parens pExpr
+    ]
 
 -- パース関数
 parseExpr :: String -> Either String Expr
 parseExpr input = case parse (spaceConsumer *> pExpr <* eof) "<input>" input of
   Left err -> Left $ errorBundlePretty err
-  Right result -> Right result 
+  Right result -> Right result

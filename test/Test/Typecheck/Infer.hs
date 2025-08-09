@@ -1,13 +1,14 @@
 module Test.Typecheck.Infer where
 
-import Test.Hspec
-import qualified Data.Map as M
 import Control.Monad.State
-
+import qualified Data.Map as M
 import Syntax
-import Typecheck.Subst
+import Test.Hspec
+import Test.Syntax ()
 import Typecheck.Infer
-import Test.Syntax () -- Arbitrary instances
+import Typecheck.Subst
+
+-- Arbitrary instances
 
 -- Helper function to run inference
 runInfer :: InferM a -> Either TypeErr a
@@ -22,7 +23,7 @@ spec = do
       case runInfer (infer env (Var "x")) of
         Right (_, ty) -> ty `shouldBe` TV "a"
         Left _ -> expectationFailure "Expected successful inference"
-    
+
     it "fails on unbound variable" $ do
       let env = M.empty
       case runInfer (infer env (Var "x")) of
@@ -46,7 +47,6 @@ spec = do
       case runInfer (infer env expr) of
         Left TypeMismatch -> True `shouldBe` True -- Expected due to unbound 'y'
         _ -> True `shouldBe` True -- Allow other outcomes for now
-
   describe "Fresh type variable generation" $ do
     it "generates different type variables" $ do
       let genTwo = do
@@ -55,4 +55,4 @@ spec = do
             return (tv1, tv2)
       case runInfer genTwo of
         Right (tv1, tv2) -> tv1 `shouldNotBe` tv2
-        _ -> expectationFailure "Failed to generate type variables" 
+        _ -> expectationFailure "Failed to generate type variables"
